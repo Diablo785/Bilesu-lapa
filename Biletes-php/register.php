@@ -1,4 +1,6 @@
 <?php
+header("Access-Control-Allow-Origin: http://localhost:3000");
+
 include 'db.php';
 
 class Register extends DB {
@@ -19,7 +21,7 @@ class Register extends DB {
 
 if ($_SERVER["REQUEST_METHOD"] == "POST") {
     $register = new Register();
-    $username = $_POST['username'];
+    $username = $_POST['username']; 
     $email = $_POST['email'];
     $password = $_POST['password'];
 

@@ -1,4 +1,5 @@
 import React, { useState } from 'react';
+import { useNavigate } from 'react-router-dom';
 import backgroundImage from '../images/wallpaper.jpg';
 import '../css/AuthForm.css';
 
@@ -6,13 +7,27 @@ function LoginForm({ onSubmit, onSwitchToRegister }) {
   const [username, setUsername] = useState('');
   const [password, setPassword] = useState('');
   const [error, setError] = useState('');
+  const [successMessage, setSuccessMessage] = useState('');
+  const navigate = useNavigate();
 
   const handleSubmit = async (e) => {
     e.preventDefault();
 
-    // Front-end validation
-    if (!username || !password) {
-      setError('Username and password are required.');
+    if (!username && !password) {
+      setError('Username and Password are required.');
+      setSuccessMessage('');
+      return;
+    }
+
+    if (!username) {
+      setError('Username is required.');
+      setSuccessMessage('');
+      return;
+    }
+
+    if (!password) {
+      setError('Password is required.');
+      setSuccessMessage('');
       return;
     }
 
@@ -23,6 +38,7 @@ function LoginForm({ onSubmit, onSwitchToRegister }) {
           'Content-Type': 'application/x-www-form-urlencoded',
         },
         body: new URLSearchParams({ username, password }),
+        credentials: 'include', // Include this line
       });
 
       const data = await response.json();
@@ -31,15 +47,22 @@ function LoginForm({ onSubmit, onSwitchToRegister }) {
       console.log('Response Text:', JSON.stringify(data));
 
       if (data.success) {
-        // Additional actions for successful login
+        setSuccessMessage('Login successful!');
+        setError('');
+
+        setTimeout(() => {
+          navigate('/allEvents');
+          window.location.reload();
+        }, 1000);
       } else {
         setError(data.message);
+        setSuccessMessage('');
       }
 
       setUsername('');
       setPassword('');
     } catch (error) {
-      console.error('Error:', error);
+      console.error('Error during login:', error);
     }
   };
 
@@ -67,7 +90,8 @@ function LoginForm({ onSubmit, onSwitchToRegister }) {
             onChange={(e) => setPassword(e.target.value)}
           />
         </div>
-        <div className="errorCont">
+        <div className="messageCont">
+          {successMessage && <p className="success-message">{successMessage}</p>}
           {error && <p className="error-message">{error}</p>}
         </div>
         <button type="submit">Login</button>
@@ -88,18 +112,39 @@ function RegisterForm({ onSubmit, onSwitchToLogin }) {
   const [password, setPassword] = useState('');
   const [verifyPassword, setVerifyPassword] = useState('');
   const [error, setError] = useState('');
+  const [successMessage, setSuccessMessage] = useState('');
 
   const handleRegistration = async (e) => {
     e.preventDefault();
 
-    // Front-end validation
     if (!username || !email || !password || !verifyPassword) {
       setError('All fields are required.');
+      setSuccessMessage('');
+      return;
+    }
+
+    if (username.length < 5) {
+      setError('Username must be at least 6 characters long.');
+      setSuccessMessage('');
+      return;
+    }
+
+    const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+    if (!emailRegex.test(email)) {
+      setError('Enter a valid email address.');
+      setSuccessMessage('');
+      return;
+    }
+
+    if (password.length < 6) {
+      setError('Password must be at least 6 characters long.');
+      setSuccessMessage('');
       return;
     }
 
     if (password !== verifyPassword) {
       setError('Password and Verify Password must match.');
+      setSuccessMessage('');
       return;
     }
 
@@ -118,9 +163,11 @@ function RegisterForm({ onSubmit, onSwitchToLogin }) {
         const data = JSON.parse(textResponse);
         console.log('Registration response:', data);
         if (data.success) {
-          // Additional actions for successful registration
+          setSuccessMessage('Registration successful! You can now Log In');
+          setError('');
         } else {
           setError(data.message);
+          setSuccessMessage('');
         }
       } catch (jsonError) {
         console.error('Error parsing JSON:', jsonError);
@@ -174,7 +221,8 @@ function RegisterForm({ onSubmit, onSwitchToLogin }) {
             onChange={(e) => setVerifyPassword(e.target.value)}
           />
         </div>
-        <div className="errorCont">
+        <div className="messageCont">
+          {successMessage && <p className="success-message">{successMessage}</p>}
           {error && <p className="error-message">{error}</p>}
         </div>
         <button type="submit" value="Register">Register</button>
@@ -195,20 +243,16 @@ function App() {
   const handleLoginSubmit = async (data) => {
     if (data.success) {
       console.log('Login successful');
-      // Redirect or perform other actions for a successful login
     } else {
       console.error('Login failed:', data.message);
-      // Display an error message to the user
     }
   };
-  
+
   const handleRegisterSubmit = async (data) => {
     if (data.success) {
       console.log('Registration successful');
-      // Redirect or perform other actions for a successful registration
     } else {
       console.error('Registration failed:', data.message);
-      // Display an error message to the user
     }
   };
 

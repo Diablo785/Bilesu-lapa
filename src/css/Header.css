@@ -1,0 +1,95 @@
+.header {
+    display: flex;
+    width: 100vw;
+    height: 75px;
+    top: 0;
+    position: fixed;
+    justify-content: space-between;
+    background-color: rgb(233, 249, 255);
+    border-bottom: 1px solid black;
+    align-items: center;
+    padding: 0 10px;
+  }
+  
+  .buttonCont {
+    display: flex;
+    align-items: center;
+    justify-content: center; /* Center the items horizontally */
+    flex-grow: 1; /* Allow the buttons to take up available space */
+  }
+  
+  .user_icon {
+    height: 60px;
+    width: 60px;
+    position: relative;
+    overflow: hidden;
+    margin-right: 30px;
+  }
+  
+  .user_icon img {
+    object-fit: cover;
+    width: 100%;
+    height: 100%;
+  }
+  
+  .buttonCont .button {
+    color: #000000;
+    text-decoration: none;
+    padding: 10px;
+    margin: 0 25px;
+    font-size: 20px;
+    font-weight: bold;
+    border-radius: 5px;
+    transition: background-color 0.3s;
+    background-color: rgb(197, 226, 236);
+    text-align: center;
+  }
+  
+  .button:hover {
+    background-color: #61a3eb;
+  }
+
+  .user_icon {
+    cursor: pointer; /* Add cursor pointer to indicate it's clickable */
+  }
+  
+  .userMenuContainer {
+    position: fixed;
+    top: 76px;
+    right: 0;
+    width: 0;
+    height: 175px;
+    background-color: rgba(255, 255, 255, 0.9);
+    border: 1px solid black;
+    overflow-x: hidden;
+    transition: 0.35s;
+  }
+  
+  .userMenuContent {
+    text-align: center;
+    height: 100%;
+    display: flex;
+    justify-content: center;
+    flex-direction: column;
+    align-items: center;
+  }
+  
+  .userMenuContainer.open {
+    width: 200px;
+    height: 175px;
+  }
+
+  .userMenuButton{
+    width: 100%;
+    font-size: 24px;
+    font-weight: bold;
+    padding: 15px;
+    text-align: center;
+    text-decoration: none;
+    color: black;
+  }
+
+  .userMenuButton:hover{
+    background-color: rgb(227, 248, 255);
+  }
+  
